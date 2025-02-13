@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Quieres ser mi Valentín?</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffe6f0;
+      background-image: url('https://www.transparenttextures.com/patterns/clouds.png'),
+                        url('https://www.toptal.com/designers/subtlepatterns/patterns/heartfelt.png');
+      background-blend-mode: multiply;
+      background-repeat: repeat;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    h1 {
+      color: #cc0000;
+      font-size: 3em;
+      margin-bottom: 20px;
+      transition: all 0.5s ease-in-out;
+    }
+    #gif {
+      margin-bottom: 20px;
+    }
+    #gif img {
+      max-width: 300px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    .buttons-container {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #ff6666;
+      border: none;
+      color: white;
+      font-size: 1.5em;
+      padding: 15px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      min-width: 150px;
+    }
+    button:hover {
+      background-color: #e60000;
+    }
+    #mensaje {
+      font-size: 1.5em;
+      color: #cc0000;
+      margin-top: 30px;
+    }
+    #heart-animation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .heart {
+      position: absolute;
+      animation: floatUp 2s ease-out forwards;
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-150px) scale(1.5);
+        opacity: 0;
+      }
+    }
+    @keyframes smokeOut {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="pregunta">¿Quieres ser mi Valentín?</h1>
+  
+  <div id="gif">
+    <!-- Por defecto, muestra el tercer GIF -->
+    <img id="gifImage" src="https://media.giphy.com/media/R52934IAVt4jK/giphy.gif" alt="Gatitos con corazones">
+  </div>
+  
+  <div class="buttons-container" id="buttons">
+    <button id="btnSi" onclick="handleSiClick()">SI 💞</button>
+    <button id="btnNo" onclick="handleNoClick()">NO 😔</button>
+  </div>
+  
+  <div id="mensaje"></div>
+  
+  <div id="heart-animation"></div>
+  
+  <script>
+    let scaleSi = 1;
+    let scaleNo = 1;
+    let frases = [
+      "¿Segura? 😢", "Dame una oportunidad ❤️", "Piensa en los gatitos 🐱", "Merezco una oportunidad 💖",
+      "¿Ni un poquito de amor? 🥺", "Vamos, di que sí 💘", "Hazlo por el amor 💞", "No seas cruel 😔",
+      "¡Tienes un gran corazón! 💗", "Aceptar es la mejor opción 😉", "No te resistas, sé mi Valentín ❤️",
+      "Haz feliz a un pobre corazón 💔", "Yo sé que en el fondo quieres 💓", "No me hagas sufrir 🥹",
+      "Si me dices que sí, habrá chocolates 🍫", "El amor siempre gana 💕", "No digas no, di ¡sí! 😘",
+      "Te haré la persona más feliz 💑", "Última oportunidad... 🥺"
+    ];
+    let indiceFrase = 0;
+    
+    function handleSiClick() {
+      document.getElementById('mensaje').innerHTML = 'Eres mi Valentín y mi niña hermosa ❤️';
+      document.getElementById('pregunta').textContent = "SABÍA QUE DIRÍAS QUE SÍ, MI AMOR ❤️";
+      document.getElementById('buttons').style.display = "none"; // Ocultar botones
+
+      // Cambiar el GIF al segundo cuando presiona SI
+      document.getElementById('gifImage').src = "https://media.giphy.com/media/1JmGiBtqTuehfYxuy9/giphy.gif";
+      spawnHearts();
+    }
+    
+    function handleNoClick() {
+      scaleNo = Math.max(0.5, scaleNo - 0.1);
+      scaleSi += 0.1;
+      document.getElementById('btnNo').style.transform = 'scale(' + scaleNo + ')';
+      document.getElementById('btnSi').style.transform = 'scale(' + scaleSi + ')';
+
+      // Cambiar el GIF al primero cuando presiona NO
+      document.getElementById('gifImage').src = "https://media.giphy.com/media/M83PIavYTP2wObZfnv/giphy.gif";
+      
+      if (indiceFrase < frases.length) {
+        document.getElementById('btnNo').textContent = frases[indiceFrase];
+        indiceFrase++;
+      } else {
+        let btnNo = document.getElementById('btnNo');
+        btnNo.style.animation = "smokeOut 1.5s forwards";
+        setTimeout(() => {
+          btnNo.style.display = "none";
+        }, 1500);
+      }
+    }
+    
+    function spawnHearts() {
+      const container = document.getElementById('heart-animation');
+      for (let i = 0; i < 19; i++) {
+        let heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.textContent = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = Math.random() * 100 + 'vh';
+        heart.style.fontSize = (Math.random() * 2 + 1) + 'em';
+        container.appendChild(heart);
+        setTimeout(() => {
+          heart.remove();
+        }, 2000);
+      }
+    }
+  </script>
+</body>
+</html>
